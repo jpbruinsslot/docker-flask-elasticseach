@@ -1,0 +1,27 @@
+#####
+# Docker compose YAML file
+#
+# For documentation see: https://docs.docker.com/compose.yml
+#####
+
+datastore:
+    image: busybox
+    volumes:
+        - /opt/flask-app/elasticsearch:/usr/share/elasticsearch/data
+
+elasticsearch:
+    image: elasticsearch
+    volumes_from:
+        - datastore
+
+app:
+    build: .
+    volumes:
+        - code:/srv/flask
+    ports:
+        - "9080:80"
+        - "9443:443"
+    links:
+        - elasticsearch
+    env_file:
+        - config/environment/env

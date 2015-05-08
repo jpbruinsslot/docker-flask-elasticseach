@@ -1,0 +1,29 @@
+#####
+# In this file you can specify the environment variables. The containers will
+# be able to access these variables and use them if necessary. Remember when
+# you are using this project this files needs to be out of version control,
+# because it can hold sensitive information.
+#####
+
+
+#####
+# Flask
+#####
+
+# The name of the Flask project, this is used in the file flask-uwsgi.ini
+# and setup.sh
+FLASK_PROJECT_NAME=starter
+
+
+#####
+# Nginx
+#####
+
+# Server name used in nginx.j2
+NGINX_SERVER_NAME=localhost
+
+# Here you can specify the location of your SSL/TLS certificate and key.
+# This will be specified in the nginx.j2 When empty it uses the default 
+# self-signed certificate provided by this project
+NGINX_CRT_NAME
+NGINX_KEY_NAME
