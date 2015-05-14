@@ -8,4 +8,4 @@
 #####
 # nginx setup with provided template
 #####
-j2 /srv/config/nginx/nginx.j2 > /etc/nginx/sites-enabled/default
+./srv/config/bin/template /srv/config/nginx/nginx.tmpl:/etc/nginx/sites-enabled/default
