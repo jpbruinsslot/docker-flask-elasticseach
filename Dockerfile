@@ -27,22 +27,29 @@ RUN apt-get -y update && \
     git-core \
     curl \
     wget \
-    python \
-    python-dev \
-    python-setuptools \
+    python3 \
+    python3-pip \
+    python3-dev \
+    python3-setuptools \
     nginx
+
+
+#####
+# Download template application
+#####
+RUN mkdir -p /srv/config/bin
+RUN curl -Lo /srv/config/bin/template \
+    https://github.com/erroneousboat/template/raw/master/bin/template
+RUN chmod +x /srv/config/bin/template
 
 
 #####
 # Install and setup PIP and uWSGI
 #####
 
-# Install pip
-RUN easy_install pip
-
 # Install application requirements
 ADD ./config/app/requirements.txt /srv/config/requirements.txt
-RUN pip install -r /srv/config/requirements.txt
+RUN pip3 install -r /srv/config/requirements.txt
 
 
 #####
@@ -54,7 +61,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # Add the nginx configuration file to the container
 RUN rm /etc/nginx/sites-enabled/default
-ADD ./config/nginx/nginx.j2 /srv/config/nginx/nginx.j2
+ADD ./config/nginx/nginx.tmpl /srv/config/nginx/nginx.tmpl
 
 # Copy SSL certs to location specified in nginx.conf
 ADD ./config/nginx/localhost.crt /etc/ssl/certs/localhost.crt

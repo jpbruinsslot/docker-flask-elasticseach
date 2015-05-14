@@ -9,22 +9,28 @@ ssl_session_timeout 10m;
 # Rewrite all HTTP to HTTPS
 server {
     listen 80 default_server;
-    server_name {{ NGINX_SERVER_NAME }};
+    server_name {{ .Env.NGINX_SERVER_NAME }};
 
     return 301 https://$http_host$request_uri;
 }
 
 server {
     listen 443 ssl default_server;
-    server_name {{ NGINX_SERVER_NAME }};
+    server_name {{ .Env.NGINX_SERVER_NAME }};
 
     # see http://nginx.org/en/docs/http/configuriNGINX_https_servers.html
-    ssl_certificate /etc/ssl/certs/{{ NGINX_CRT_NAME if NGINX_CRT_NAME else 'localhost.crt' }};
-    ssl_certificate_key /etc/ssl/private/{{ NGINX_KEY_NAME if NGINX_KEY_NAME else 'localhost.key' }};
+    {{if .Env.NGINX_CRT_NAME}}
+        ssl_certificate /etc/ssl/certs/{{ .Env.NGINX_CRT_NAME }};
+        ssl_certificate_key /etc/ssl/private/{{ .Env.NGINX_KEY_NAME }};
+    {{else}}
+        ssl_certificate /etc/ssl/certs/localhost.crt;
+        ssl_certificate_key /etc/ssl/private/localhost.key;
+    {{end}}
+
     ssl_prefer_server_ciphers on;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # ie defaults minus SSLv3
 
-    access_log /var/log/nginx/{{ NGINX_SERVER_NAME }}.default.log;
+    access_log /var/log/nginx/{{ .Env.NGINX_SERVER_NAME }}.default.log;
 
     #location /static {
         #alias /srv/static-files;
